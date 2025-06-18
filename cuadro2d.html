@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html>
+<body>
+<div style="background-image: url('fondo2.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.2;
+  z-index: -1;">
+</div>
+ <h1 style="flex: 1;margin:0; color:#6A0DAD; font-family:'Verdana', sans-serif; font-size:70px; text-align: center; font-weight:bold">
+¡¡COMENCEMOOOS!!
+<h1 style="flex: 1;margin:0; color:black; font-family:'Verdana', sans-serif; font-size:32px; text-align:center;">
+Selecciona letra por letra hasta formar las palabras, estas se encuentran al final del juego y se marcarán en verde si son correctas.
+Al final, puedes usar el botón de reinicio para volver a intentarlo.
+<hr>
+<html lang="es">
+<head>
+ <meta charset="UTF-8">
+  <title>BASURA ELECTRONICA</title>
+  <style>
+    body {
+      font-family: 'Verdana', sans-serif;
+      color: #444;
+      text-align: center; 
+      padding: 20px;
+    }
+
+    h1 {
+      color: #d63384;
+      text-shadow: 1px 1px 3px #fff;
+    }
+
+    #sopa {
+      display: grid;
+      grid-template-columns: repeat(18, 35px);
+      gap: 4px;
+      justify-content: center;
+      margin-top: 20px;
+    }
+
+    .letra {
+      background-color: #fff0f6;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      width: 35px;
+      height: 35px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-weight: bold;
+      font-size: 16px;
+      color: #444;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .letra:hover {
+      background-color: #ffe4ec;
+    }
+
+    .seleccionada {
+      background-color: #b2ebf2 !important;
+    }
+
+    .encontrada {
+      background-color: #81c784 !important;
+      color: white !important;
+    }
+
+    #palabras {
+      margin-top: 25px;
+      font-size: 16px;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .tachada {
+      text-decoration: line-through;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+
+ <h1 style="flex: 1;margin:0; color:#6A0DAD; font-family:'Verdana',sans-serif; font-size:70px; text-align: center; font-weight:bold">
+  SOPA DE LETRAS 
+  <div id="sopa"></div>
+  <div id="palabras"><strong>Encuentra:</strong> <span id="lista-palabras"></span></div>
+  <br>
+  <button onclick="location.reload()" style="
+    padding: 10px 20px;
+    background-color: #f8bbd0;
+    border: none;
+    border-radius: 10px;
+    font-size: 30px;
+    cursor: pointer;
+    color: #444;
+  ">Reiniciar sopa</button>
+
+  <script>
+    const palabras = [
+      "BASURAELECTRONICA", "RESIDUOS", "DISPOSITIVOS",
+      "DESECHADOS", "DESUSO", "MATERIALES",
+      "CONTAMINANTES", "RECICLAR", "REUTILIZAR"
+    ];
+
+    let encontradas = [];
+    const gridSize = 18;
+    const sopa = document.getElementById('sopa');
+    const tablero = Array(gridSize).fill(null).map(() => Array(gridSize).fill(''));
+    const celdas = [];
+
+    document.getElementById("lista-palabras").innerHTML = palabras.map(p => `<span>${p}</span>`).join(', ');
+
+    function colocarPalabra(palabra, fila, columna, horizontal = true) {
+      for (let i = 0; i < palabra.length; i++) {
+        if (horizontal && columna + i < gridSize) {
+          tablero[fila][columna + i] = palabra[i];
+        } else if (!horizontal && fila + i < gridSize) {
+          tablero[fila + i][columna] = palabra[i];
+        }
+      }
+    }
+
+    colocarPalabra("BASURAELECTRONICA", 0, 0);
+    colocarPalabra("RESIDUOS", 2, 5);
+    colocarPalabra("DISPOSITIVOS", 4, 0);
+    colocarPalabra("DESECHADOS", 6, 3);
+    colocarPalabra("DESUSO", 8, 5);
+    colocarPalabra("MATERIALES", 10, 0);
+    colocarPalabra("CONTAMINANTES", 12, 1);
+    colocarPalabra("RECICLAR", 14, 8);
+    colocarPalabra("REUTILIZAR", 16, 6);
+
+    const letras = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    for (let i = 0; i < gridSize; i++) {
+      for (let j = 0; j < gridSize; j++) {
+        if (tablero[i][j] === '') {
+          tablero[i][j] = letras[Math.floor(Math.random() * letras.length)];
+        }
+      }
+    }
+
+    let seleccion = [];
+
+    tablero.forEach((fila, i) => {
+      fila.forEach((letra, j) => {
+        const celda = document.createElement('div');
+        celda.textContent = letra;
+        celda.className = 'letra';
+        sopa.appendChild(celda);
+        celdas.push({ el: celda, i, j });
+
+        celda.addEventListener('click', () => {
+          if (celda.classList.contains('encontrada')) return;
+
+          celda.classList.toggle('seleccionada');
+          const idx = seleccion.findIndex(pos => pos.i === i && pos.j === j);
+
+          if (idx >= 0) {
+            seleccion.splice(idx, 1);
+          } else {
+            seleccion.push({ letra, i, j, celda });
+          }
+
+          verificarSeleccion();
+        });
+      });
+    });
+
+    function verificarSeleccion() {
+      const palabraFormada = seleccion.map(x => x.letra).join('');
+      const palabraInversa = seleccion.map(x => x.letra).reverse().join('');
+
+      if (palabras.includes(palabraFormada) || palabras.includes(palabraInversa)) {
+        seleccion.forEach(x => {
+          x.celda.classList.remove('seleccionada');
+          x.celda.classList.add('encontrada');
+        });
+
+        const encontrada = palabras.includes(palabraFormada) ? palabraFormada : palabraInversa;
+        if (!encontradas.includes(encontrada)) {
+          encontradas.push(encontrada);
+          actualizarListaPalabras();
+        }
+
+        seleccion = [];
+      }
+    }
+
+    function actualizarListaPalabras() {
+      const span = document.getElementById('lista-palabras');
+      span.innerHTML = palabras.map(p =>
+        encontradas.includes(p)
+          ? `<span class="tachada">${p}</span>`
+          : p
+      ).join(', ');
+    }
+  </script>
+<div id="ahorcado-juego" style="margin-top: 40px;">
+<h1 style="flex: 1;margin:0; color:black; font-family:'Verdana', sans-serif; font-size:32px; text-align:center;">
+<hr>
+<br>
+En este juego aparecen las posibles palabras a encontrar deveras seleccionar la letra que creas que esta.
+Al final, puedes usar el botón de reinicio para volver a intentarlo.
+</br>
+<br>
+<hr>
+</br>
+<h1 style="flex: 1;margin:0; color:#6A0DAD; font-family:'Verdana',sans-serif; font-size:70px; text-align: center; font-weight:bold">
+  AHORCADO
+<h1 style="flex: 1;margin:0; color:black; font-family:'times new roman',serif; font-size:20px; text-align: center; font-weight:bold">
+  <p>Palabras posibles: E-WASTE, APARATOS, PRODUCTOS, CONTAMINANTES, RECURSOS, ELECTRICOS</p>
+
+  <div id="ahorcado-palabra">Cargando...</div>
+  <div id="ahorcado-letras"></div>
+  <div id="ahorcado-mensaje"></div>
+  <button onclick="location.reload()" style="
+    padding: 10px 20px;
+    background-color: #f8bbd0;
+    border: none;
+    border-radius: 10px;
+    font-size: 30px;
+    cursor: pointer;
+    color: #444;
+  ">Reiniciar ahorcado</button>
+</div>
+
+<style>
+  #ahorcado-palabra {
+    font-size: 32px;
+    margin: 20px;
+    letter-spacing: 10px;
+  }
+  #ahorcado-letras button {
+    margin: 5px;
+    padding: 10px;
+    font-size: 16px;
+  }
+  #ahorcado-mensaje {
+    margin-top: 20px;
+    font-size: 20px;
+    font-weight: bold;
+  }
+</style>
+
+<script>
+  //Variables propias del ahorcado
+  var ahorcadoPalabras = ["E-WASTE", "APARATOS", "PRODUCTOS", "CONTAMINANTES", "RECURSOS", "ELECTRICOS"];
+  var ahorcadoPalabra = "";
+  var ahorcadoLetrasAdivinadas = [];
+  var ahorcadoIntentos = 6;
+
+  function ahorcadoIniciar() {
+    ahorcadoPalabra = ahorcadoPalabras[Math.floor(Math.random() * ahorcadoPalabras.length)];
+    ahorcadoLetrasAdivinadas = [];
+    ahorcadoIntentos = 6;
+    document.getElementById("ahorcado-mensaje").innerHTML = "";
+    ahorcadoMostrarPalabra();
+    ahorcadoCrearBotones();
+  }
+
+  function ahorcadoMostrarPalabra() {
+    var mostrar = "";
+    for (var i = 0; i < ahorcadoPalabra.length; i++) {
+      var letra = ahorcadoPalabra.charAt(i);
+      if (letra === "-" || letra === " ") {
+        mostrar += letra + " ";
+      } else if (ahorcadoLetrasAdivinadas.indexOf(letra) !== -1) {
+        mostrar += letra + " ";
+      } else {
+        mostrar += "_ ";
+      }
+    }
+    document.getElementById("ahorcado-palabra").innerHTML = mostrar.trim();
+
+    if (mostrar.indexOf("_") === -1) {
+      document.getElementById("ahorcado-mensaje").innerHTML = "¡Ganaste!";
+      ahorcadoDesactivarBotones();
+    }
+  }
+
+  function ahorcadoCrearBotones() {
+    var abc = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    var contenedor = document.getElementById("ahorcado-letras");
+    contenedor.innerHTML = "";
+    for (var i = 0; i < abc.length; i++) {
+      var letra = abc.charAt(i);
+      var boton = document.createElement("button");
+      boton.innerHTML = letra;
+      boton.onclick = function() {
+        ahorcadoProbarLetra(this.innerHTML);
+      };
+      contenedor.appendChild(boton);
+    }
+  }
+
+  function ahorcadoProbarLetra(letra) {
+    if (ahorcadoPalabra.indexOf(letra) !== -1) {
+      ahorcadoLetrasAdivinadas.push(letra);
+    } else {
+      ahorcadoIntentos--;
+    }
+
+    ahorcadoMostrarPalabra();
+    ahorcadoDesactivarLetra(letra);
+
+    if (ahorcadoIntentos <= 0) {
+      document.getElementById("ahorcado-mensaje").innerHTML = "Perdiste. La palabra era: " + ahorcadoPalabra;
+      ahorcadoDesactivarBotones();
+    }
+  }
+
+  function ahorcadoDesactivarLetra(letra) {
+    var botones = document.getElementById("ahorcado-letras").getElementsByTagName("button");
+    for (var i = 0; i < botones.length; i++) {
+      if (botones[i].innerHTML === letra) {
+        botones[i].disabled = true;
+        break;
+      }
+    }
+  }
+
+  function ahorcadoDesactivarBotones() {
+    var botones = document.getElementById("ahorcado-letras").getElementsByTagName("button");
+    for (var i = 0; i < botones.length; i++) {
+      botones[i].disabled = true;
+    }
+  }
+
+  //Iniciar automáticamente
+  ahorcadoIniciar();
+</script>
+
+</body>
+</html>

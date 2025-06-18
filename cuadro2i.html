@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="es">
+<body>
+<div style="background-image: url('fondo2.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.2;
+  z-index: -1;">
+</div>
+  <meta charset="UTF-8" />
+  <title>topo</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background: pink;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+
+    h1 {
+      color: #6A5ACD;
+      font-size: 70px;
+      margin-bottom: 10px;
+      font-family: 'Verdana', sans-serif;
+    }
+
+    .juego {
+      display: grid;
+      grid-template-columns: repeat(3, 120px);
+      grid-template-rows: repeat(3, 120px);
+      gap: 15px;
+      margin: 30px 0;
+    }
+
+    .hoyo {
+      background: #ffe4ec;
+      border: 3px solid #ff69b4;
+      border-radius: 12px;
+      position: relative;
+      cursor: pointer;
+      transition: transform 0.1s;
+    }
+
+    .hoyo:hover {
+      transform: scale(1.05);
+    }
+
+    .hoyo img {
+      width: 100%;
+      height: 100%;
+      display: none;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    #ganaste {
+      display: none;
+      font-size: 50px;
+      font-weight: bold;
+      color: #e91e63;
+      margin-top: 20px;
+      text-shadow: 2px 2px #ffc0cb;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 30px;
+      background: #ff69b4;
+      border: none;
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #e91e63;
+    }
+  </style>
+</head>
+<body>
+
+
+
+<h1>¡GOLPEA LA IMAGEN!</h1>
+
+<div class="juego" id="juego">
+  <!-- Se llenará con JS -->
+</div>
+
+<button onclick="reiniciarJuego()">Reiniciar</button>
+<div id="ganaste">¡GANASTE!</div>
+
+<script>
+  const juego = document.getElementById("juego");
+  const ganasteMsg = document.getElementById("ganaste");
+  let topos = [];
+  let topoActivo = -1;
+  let intervalo;
+
+  const imagenURL = "trol.jpg"; // ← Cambia este link por tu imagen
+
+  function crearHuecos() {
+    juego.innerHTML = "";
+    topos = [];
+
+    for (let i = 0; i < 9; i++) {
+      const hoyo = document.createElement("div");
+      hoyo.classList.add("hoyo");
+
+      const img = document.createElement("img");
+      img.src = imagenURL;
+
+      hoyo.appendChild(img);
+      juego.appendChild(hoyo);
+      topos.push({ contenedor: hoyo, imagen: img });
+
+      hoyo.addEventListener("click", () => {
+        if (i === topoActivo) {
+          mostrarGanador();
+        }
+      });
+    }
+  }
+
+  function mostrarGanador() {
+    clearInterval(intervalo);
+    topos.forEach(t => t.imagen.style.display = "none");
+    ganasteMsg.style.display = "block";
+  }
+
+  function mostrarTopo() {
+    // Ocultar todos
+    topos.forEach(t => t.imagen.style.display = "none");
+
+    // Mostrar uno al azar
+    topoActivo = Math.floor(Math.random() * topos.length);
+    topos[topoActivo].imagen.style.display = "block";
+  }
+
+  function iniciarJuego() {
+    ganasteMsg.style.display = "none";
+    mostrarTopo();
+    intervalo = setInterval(mostrarTopo, 1000);
+  }
+
+  function reiniciarJuego() {
+    clearInterval(intervalo);
+    crearHuecos();
+    iniciarJuego();
+  }
+
+  // Iniciar automáticamente
+  crearHuecos();
+  iniciarJuego();
+</script>
+</br>
+
+<hr>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Ordena la frase</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f0f8ff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px;
+    }
+
+    h1 {
+      color: #4a148c;
+      font-size: 70px;
+      margin-bottom: 20px;
+    }
+
+    #contenedor {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 30px;
+    }
+
+    .palabra {
+      background-color: #ba68c8;
+      color: white;
+      padding: 10px 15px;
+      border-radius: 8px;
+      cursor: grab;
+      font-weight: bold;
+      transition: background 0.3s;
+      user-select: none;
+    }
+
+    .palabra:hover {
+      background-color: #ab47bc;
+    }
+
+    #mensaje {
+      font-size: 30px;
+      font-weight: bold;
+      color: #d81b60;
+      margin: 20px;
+      display: none;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 30px;
+      background: #7b1fa2;
+      border: none;
+      color: white;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.3s;
+    }
+
+    button:hover {
+      background: #6a1b9a;
+    }
+  </style>
+</head>
+<body>
+<hr>
+<h1>ORDENA LA FRASE</h1>
+
+<div id="contenedor"></div>
+<div id="mensaje">¡Perfectooo! ✅</div>
+<button onclick="reiniciar()">Reiniciar</button>
+
+<script>
+  const fraseOriginal = "En un mundo donde la tecnología avanza rápidamente, la basura electrónica se ha convertido en un problema ambiental creciente.";
+  const palabrasCorrectas = fraseOriginal.trim().split(" ");
+  let palabrasMezcladas = [];
+
+  const contenedor = document.getElementById("contenedor");
+  const mensaje = document.getElementById("mensaje");
+
+  function mezclar(array) {
+    return array.slice().sort(() => Math.random() - 0.5);
+  }
+
+  function crearPalabras() {
+    contenedor.innerHTML = "";
+    palabrasMezcladas.forEach((palabra, index) => {
+      const span = document.createElement("span");
+      span.textContent = palabra;
+      span.classList.add("palabra");
+      span.setAttribute("draggable", true);
+      span.setAttribute("data-index", index);
+
+      span.addEventListener("dragstart", (e) => {
+        e.dataTransfer.setData("text/plain", index);
+      });
+
+      span.addEventListener("dragover", (e) => e.preventDefault());
+
+      span.addEventListener("drop", (e) => {
+        e.preventDefault();
+        const fromIndex = parseInt(e.dataTransfer.getData("text/plain"));
+        const toIndex = parseInt(span.getAttribute("data-index"));
+
+        // Intercambiar
+        [palabrasMezcladas[fromIndex], palabrasMezcladas[toIndex]] = [palabrasMezcladas[toIndex], palabrasMezcladas[fromIndex]];
+        actualizarPalabras();
+
+        // Verificar
+        verificarOrden();
+      });
+
+      contenedor.appendChild(span);
+    });
+  }
+
+  function verificarOrden() {
+    if (palabrasMezcladas.join(" ") === palabrasCorrectas.join(" ")) {
+      mensaje.style.display = "block";
+    } else {
+      mensaje.style.display = "none";
+    }
+  }
+
+  function actualizarPalabras() {
+    crearPalabras();
+  }
+
+  function reiniciar() {
+    mensaje.style.display = "none";
+    palabrasMezcladas = mezclar(palabrasCorrectas);
+    crearPalabras();
+  }
+
+  // Iniciar el juego
+  reiniciar();
+</script>
+</body>
+</html>

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<body style="background-color:#f5e6ff;">
+<h1 style="flex: 1;margin:0; color:#6A5ACD; font-family:'Verdana', sans-serif; font-size:70px; text-align:center; font-weight:bold">
+      ¡¡COMENCEMOS!!
+<h1 style="flex: 1;margin:0; color:black; font-family:'Verdana', sans-serif; font-size:32px; text-align:center;">
+Selecciona correctamente si es v/f posteriormente te indicara si es correcto o no. Si deseas volver a jugar en la parte de abajo de cada juego hay un boton para reiniciarlo
+</h1>
+<hr>
+
+
+ <!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Cuestionario Verdadero o Falso</title>
+  <style>
+    body { font-family: Verdana, sans-serif; padding: 20px; font-weight:bold }
+    .pregunta { margin-bottom: 20px; padding: 10px; border: 1px solid #ccc; border-radius: 5px; }
+    .pregunta.correcta { background-color: #c8f7c5; }
+    button {  margin-top: 25px;
+      padding: 10px 20px;
+      font-size: 30px;
+      background-color: #f8bbd0;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer; }
+  </style>
+</head>
+<body>
+
+ <h1 style="flex: 1;margin:0; color:#6A5ACD; font-family:'Federicka the Great',cursive;font-size:70px; text-align: center; font-weight:bold">
+  VERDADERO O FALSO
+</h1>
+
+  <div id="cuestionario"></div>
+
+  <button onclick="reiniciarCuestionario()">Reiniciar cuestionario</button>
+
+  <script>
+    const preguntas = [
+      {
+        texto: "LA CONTAMINACIÓN DEL SUELO Y EL AGUA ES UN IMPACTO EN EL MEDIO AMBIENTE",
+        respuestaCorrecta: "VERDADERO"
+      },
+      {
+        texto: "LA EMISIÓN DE GASES TÓXICOS ES UNA CAUSA POR LA BASURA ELECTRÓNICA",
+        respuestaCorrecta: "FALSO"
+      },
+      {
+        texto: "LOS AVANCES TECNOLÓGICOS RÁPIDOS CAUSAN QUE LOS DISPOSITIVOS QUEDEN OBSOLETOS",
+        respuestaCorrecta: "VERDADERO"
+      },
+      {
+        texto: "LA PERDIDA DE RECURSOS NATURALES ES UN IMPACTO EN EL MEDIO AMBIENTE",
+        respuestaCorrecta: "VERDADERO"
+      },
+      {
+        texto: "EL BAJO NIVEL DE CONCIENCIACION ES UN IMPACTO EN EL MEDIO AMBIENTE",
+        respuestaCorrecta: "VERDADERO"
+      },
+      {
+        texto: "LA FALTA DE PROGRAMAS DE RECICLAJE SE DEBE A LA CONTAMINACIÓN DEL AGUA Y DEL SUELO",
+        respuestaCorrecta: "FALSO"
+      }
+    ];
+
+    function mostrarPreguntas() {
+      const contenedor = document.getElementById("cuestionario");
+      contenedor.innerHTML = "";
+
+      preguntas.forEach((pregunta, index) => {
+        const div = document.createElement("div");
+        div.className = "pregunta";
+        div.id = `pregunta-${index}`;
+        div.innerHTML = `
+          <p>${pregunta.texto}</p>
+          <button onclick="verificar(${index}, 'VERDADERO')">Verdadero</button>
+          <button onclick="verificar(${index}, 'FALSO')">Falso</button>
+          <span class="respuesta-texto" id="respuesta-${index}"></span>
+        `;
+        contenedor.appendChild(div);
+      });
+    }
+
+    function verificar(indice, respuestaUsuario) {
+      const correcta = preguntas[indice].respuestaCorrecta;
+      const resultado = document.getElementById(`respuesta-${indice}`);
+      const contenedor = document.getElementById(`pregunta-${indice}`);
+
+       //Evitar volver a responder
+      if (resultado.textContent !== "") return;
+
+      if (respuestaUsuario === correcta) {
+        resultado.textContent = "correcto";
+        contenedor.classList.add("correcta");
+      } else {
+        resultado.textContent = "Incorrecto.";
+      }
+    }
+
+    function reiniciarCuestionario() {
+      mostrarPreguntas();
+    }
+
+    // Mostrar preguntas al cargar
+    mostrarPreguntas();
+  </script>
+<hr>
+
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Arrastra la palabra: Causa o Impacto</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f4f8;
+      padding: 20px;
+    }
+    h2 {
+      color: #2c3e50;
+    }
+    .palabras {
+      margin-bottom: 20px;
+    }
+    .draggable {
+      display: inline-block;
+      padding: 10px 20px;
+      background-color: #3498db;
+      color: white;
+      font-weight: bold;
+      margin: 10px;
+      border-radius: 5px;
+      cursor: grab;
+    }
+    .zona-drop {
+      border: 2px dashed #7f8c8d;
+      padding: 15px;
+      margin: 15px 0;
+      border-radius: 8px;
+      background-color: #ecf0f1;
+    }
+    .zona-drop.correcto {
+      background-color: #2ecc71;
+      color: white;
+      border: none;
+    }
+    .zona-drop.incorrecto {
+      background-color: #e74c3c;
+      color: white;
+      border: none;
+    }
+    .contenedor {
+      margin-top: 20px;
+    }
+    button 
+      {  margin-top: 25px;
+      padding: 10px 20px;
+      font-size: 30px;
+      background-color: #f8bbd0;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer; }
+  </style>
+</head>
+<body>
+<h1 style="flex: 1;margin:0; color:black; font-family:' Verdana ', sans-serif; font-size:32px; text-align:center;">
+Arrastra la palabra causa/efecto a la oracion correcta. Si deseas volver a jugar en la parte de abajo de cada juego hay un boton para reiniciarlo
+</h1>
+ <h1 style="flex: 1;margin:0; color:#6A5ACD; font-family:'Federicka the Great',cursive;font-size:70px; text-align: center; font-weight:bold">
+ARRASTRA LA PALABRA
+<hr>
+</h1>
+  <div class="palabras">
+    <div class="draggable" draggable="true" id="causa">CAUSA</div>
+    <div class="draggable" draggable="true" id="impacto">IMPACTO</div>
+  </div>
+
+  <div class="contenedor">
+    <div class="zona-drop" data-correcta="causa">ABSOLENCIA PROGRAMADA</div>
+    <div class="zona-drop" data-correcta="impacto">CANTAMINACIÓN DEL SUELO Y AGUA</div>
+    <div class="zona-drop" data-correcta="causa">AVANCES TECNOLÓGICOS RAPIDOS</div>
+    <div class="zona-drop" data-correcta="impacto">EMISIÓN DE GASES TÓXICOS</div>
+    <div class="zona-drop" data-correcta="causa">BAJO NIVEL DE CONCIENCIACION</div>
+    <div class="zona-drop" data-correcta="impacto">PERDIDA DE RECURSOS NATURALES</div>
+  </div>
+
+  <button onclick="reiniciarJuego()">Reiniciar</button>
+
+  <script>
+    const palabras = document.querySelectorAll('.draggable');
+    const zonas = document.querySelectorAll('.zona-drop');
+
+    palabras.forEach(palabra => {
+      palabra.addEventListener('dragstart', e => {
+        e.dataTransfer.setData('text', e.target.id);
+      });
+    });
+
+    zonas.forEach(zona => {
+      zona.addEventListener('dragover', e => e.preventDefault());
+      zona.addEventListener('drop', e => {
+        e.preventDefault();
+        const idPalabra = e.dataTransfer.getData('text');
+        const correcta = zona.getAttribute('data-correcta');
+
+        if (idPalabra === correcta) {
+          zona.classList.add('correcto');
+          zona.innerHTML += ` <strong>(${idPalabra.toUpperCase()})</strong>`;
+        } else {
+          zona.classList.add('incorrecto');
+          zona.innerHTML += ` <strong>(${idPalabra.toUpperCase()})</strong>`;
+        }
+      });
+    });
+
+    function reiniciarJuego() {
+      zonas.forEach(zona => {
+        zona.classList.remove('correcto', 'incorrecto');
+        zona.innerHTML = zona.innerText.split('(')[0].trim();
+      });
+    }
+  </script>
+
+
+</body>
+</html>
